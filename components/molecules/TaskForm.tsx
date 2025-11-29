@@ -2,11 +2,11 @@
 import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Input } from '../atoms/Input';
+import { DateInput } from '../atoms/DateInput';
 import { Button } from '../atoms/Button';
 import { Text } from '../atoms/Text';
 import { useTheme } from '@/lib/hooks/useTheme';
 import { CreateTaskInput, TaskPriority, TaskStatus } from '@/lib/types/task.types';
-import { getDateInputValue } from '@/lib/utils/dateHelpers';
 
 interface TaskFormProps {
   onSubmit: (task: CreateTaskInput) => void;
@@ -179,14 +179,11 @@ export const TaskForm: React.FC<TaskFormProps> = ({
         </View>
 
         {/* Fecha límite */}
-        <Input
+        <DateInput
           label="Fecha límite"
-          value={dueDate ? getDateInputValue(dueDate) : ''}
-          onChangeText={(text) => {
-            const date = text ? new Date(text) : undefined;
-            setDueDate(date);
-          }}
-          placeholder="YYYY-MM-DD"
+          value={dueDate}
+          onChange={setDueDate}
+          placeholder="Seleccionar fecha límite"
           containerClassName="mt-4"
         />
 
@@ -238,7 +235,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
         </View>
 
         {/* Botones */}
-        <View className="mb-6 gap-3">
+        <View className="mt-6 gap-3">
           <Button
             title="Crear Tarea"
             onPress={handleSubmit}
