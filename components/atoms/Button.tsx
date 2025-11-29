@@ -1,6 +1,8 @@
+// components/atoms/Button.tsx
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { TouchableOpacity, TouchableOpacityProps, ActivityIndicator } from 'react-native';
 import { Text } from './Text';
+import { useTheme } from '@/lib/hooks/useTheme';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -19,11 +21,34 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const variantClasses = {
-    primary: 'bg-blue-600 active:bg-blue-700',
-    secondary: 'bg-gray-600 active:bg-gray-700',
-    outline: 'bg-transparent border-2 border-blue-600 active:bg-blue-50',
-    ghost: 'bg-transparent active:bg-gray-100',
+  const { theme } = useTheme();
+  const isDisabled = disabled || loading;
+
+  const getVariantStyles = () => {
+    switch (variant) {
+      case 'primary':
+        return {
+          backgroundColor: theme.colors.primary,
+          textColor: '#FFFFFF',
+        };
+      case 'secondary':
+        return {
+          backgroundColor: theme.colors.textSecondary,
+          textColor: '#FFFFFF',
+        };
+      case 'outline':
+        return {
+          backgroundColor: 'transparent',
+          borderColor: theme.colors.primary,
+          borderWidth: 2,
+          textColor: theme.colors.primary,
+        };
+      case 'ghost':
+        return {
+          backgroundColor: theme.colors.divider,
+          textColor: theme.colors.textSecondary,
+        };
+    }
   };
 
   const sizeClasses = {
@@ -32,25 +57,29 @@ export const Button: React.FC<ButtonProps> = ({
     large: 'px-6 py-4',
   };
 
-  const textColors = {
-    primary: 'text-white',
-    secondary: 'text-white',
-    outline: 'text-blue-600',
-    ghost: 'text-gray-700',
-  };
-
-  const isDisabled = disabled || loading;
+  const variantStyles = getVariantStyles();
 
   return (
     <TouchableOpacity
-      className={`rounded-xl items-center justify-center ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
+      className={`rounded-lg items-center justify-center ${sizeClasses[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
+      style={{
+        backgroundColor: variantStyles.backgroundColor,
+        borderColor: variantStyles.borderColor,
+        borderWidth: variantStyles.borderWidth,
+      }}
       disabled={isDisabled}
+      activeOpacity={0.7}
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'outline' || variant === 'ghost' ? '#2563eb' : '#fff'} />
+        <ActivityIndicator color={variant === 'outline' || variant === 'ghost' ? theme.colors.primary : '#fff'} />
       ) : (
-        <Text className={`font-semibold ${textColors[variant]}`}>{title}</Text>
+        <Text 
+          className="font-semibold"
+          style={{ color: variantStyles.textColor }}
+        >
+          {title}
+        </Text>
       )}
     </TouchableOpacity>
   );

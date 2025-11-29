@@ -2,6 +2,7 @@
 import React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
 import { Text } from './Text';
+import { useTheme } from '@/lib/hooks/useTheme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -17,20 +18,35 @@ export const Input: React.FC<InputProps> = ({
   containerClassName = '',
   ...props
 }) => {
+  const { theme } = useTheme();
+
   return (
     <View className={`w-full ${containerClassName}`}>
       {label && (
-        <Text variant="caption" className="mb-2 font-medium text-gray-700">
+        <Text 
+          variant="caption" 
+          className="mb-2 font-medium"
+          style={{ color: theme.colors.text }}
+        >
           {label}
         </Text>
       )}
       <TextInput
-        className={`border border-gray-300 rounded-lg px-4 py-3 text-base text-gray-900 bg-white ${error ? 'border-red-500' : 'focus:border-blue-500'} ${className}`}
-        placeholderTextColor="#9CA3AF"
+        className={`border rounded-lg px-4 py-3 text-base ${error ? 'border-red-500' : ''} ${className}`}
+        style={{
+          backgroundColor: theme.colors.surface,
+          borderColor: error ? theme.colors.error : theme.colors.border,
+          color: theme.colors.text,
+        }}
+        placeholderTextColor={theme.colors.textTertiary}
         {...props}
       />
       {error && (
-        <Text variant="caption" className="mt-1 text-red-500">
+        <Text 
+          variant="caption" 
+          className="mt-1"
+          style={{ color: theme.colors.error }}
+        >
           {error}
         </Text>
       )}

@@ -1,5 +1,5 @@
 // context/TaskContext.types.ts
-import { Task, CreateTaskInput } from '../types/task.types';
+import { CreateTaskInput, Task } from './task.types';
 
 export interface TaskContextType {
   tasks: Task[];

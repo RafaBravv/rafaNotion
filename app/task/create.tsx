@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { TaskForm } from '../../components/molecules/TaskForm';
 import { useTasks } from '@/lib/hooks/useTasks';
@@ -15,11 +15,11 @@ export default function CreateTaskScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-gray-50">
       <TaskForm
         onSubmit={handleCreateTask}
         onCancel={() => router.back()}
       />
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,11 +1,12 @@
 // components/molecules/TaskCard.tsx
+import React from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import { Task } from '@/lib/types/task.types';
+import { Text } from '../atoms/Text';
+import { IconButton } from '../atoms/IconButton';
+import { useTheme } from '@/lib/hooks/useTheme';
 import { formatDate, isOverdue } from '@/lib/utils/dateHelpers';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { IconButton } from '../atoms/IconButton';
-import { Text } from '../atoms/Text';
 
 interface TaskCardProps {
   task: Task;
@@ -14,10 +15,21 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onPress, onDelete }) => {
-  const priorityColors = {
-    low: 'bg-green-100 border-green-300',
-    medium: 'bg-yellow-100 border-yellow-300',
-    high: 'bg-red-100 border-red-300',
+  const { theme } = useTheme();
+
+  const priorityConfig = {
+    low: {
+      bg: theme.colors.priorityLowBg,
+      border: theme.colors.priorityLow,
+    },
+    medium: {
+      bg: theme.colors.priorityMediumBg,
+      border: theme.colors.priorityMedium,
+    },
+    high: {
+      bg: theme.colors.priorityHighBg,
+      border: theme.colors.priorityHigh,
+    },
   };
 
   const statusIcons = {
@@ -27,9 +39,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onPress, onDelete }) =
   };
 
   const statusColors = {
-    pending: '#9CA3AF',
-    'in-progress': '#F59E0B',
-    completed: '#10B981',
+    pending: theme.colors.statusPending,
+    'in-progress': theme.colors.statusInProgress,
+    completed: theme.colors.statusCompleted,
   };
 
   const isTaskOverdue = task.dueDate && isOverdue(task.dueDate);
@@ -37,7 +49,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onPress, onDelete }) =
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`bg-white rounded-xl border-l-4 ${priorityColors[task.priority]} p-4 mb-3 shadow-sm`}
+      className="rounded-xl border-l-4 p-4 mb-3 shadow-sm"
+      style={{
+        backgroundColor: theme.colors.card,
+        borderLeftColor: priorityConfig[task.priority].border,
+      }}
       activeOpacity={0.7}
     >
       <View className="flex-row items-start justify-between">
@@ -48,28 +64,47 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onPress, onDelete }) =
               size={20} 
               color={statusColors[task.status]} 
             />
-            <Text variant="subtitle" className="ml-2 flex-1">
+            <Text 
+              variant="subtitle" 
+              className="ml-2 flex-1"
+              style={{ color: theme.colors.text }}
+            >
               {task.title}
             </Text>
           </View>
           
           {task.description && (
-            <Text variant="body" className="text-gray-600 mb-2" numberOfLines={2}>
+            <Text 
+              variant="body" 
+              className="mb-2" 
+              numberOfLines={2}
+              style={{ color: theme.colors.textSecondary }}
+            >
               {task.description}
             </Text>
           )}
 
           <View className="flex-row items-center flex-wrap gap-2">
             {task.dueDate && (
-              <View className={`flex-row items-center px-2 py-1 rounded-md ${isTaskOverdue ? 'bg-red-100' : 'bg-gray-100'}`}>
+              <View 
+                className="flex-row items-center px-2 py-1 rounded-md"
+                style={{ 
+                  backgroundColor: isTaskOverdue 
+                    ? theme.colors.priorityHighBg 
+                    : theme.colors.divider 
+                }}
+              >
                 <Ionicons 
                   name="calendar-outline" 
                   size={14} 
-                  color={isTaskOverdue ? '#EF4444' : '#6B7280'} 
+                  color={isTaskOverdue ? theme.colors.error : theme.colors.textSecondary} 
                 />
                 <Text 
                   variant="caption" 
-                  className={`ml-1 ${isTaskOverdue ? 'text-red-600' : 'text-gray-600'}`}
+                  className="ml-1"
+                  style={{ 
+                    color: isTaskOverdue ? theme.colors.error : theme.colors.textSecondary 
+                  }}
                 >
                   {formatDate(task.dueDate)}
                 </Text>
@@ -77,8 +112,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onPress, onDelete }) =
             )}
 
             {task.tags && task.tags.map((tag, index) => (
-              <View key={index} className="bg-blue-100 px-2 py-1 rounded-md">
-                <Text variant="caption" className="text-blue-700">
+              <View 
+                key={index} 
+                className="px-2 py-1 rounded-md"
+                style={{ backgroundColor: theme.colors.primaryLight + '20' }}
+              >
+                <Text 
+                  variant="caption"
+                  style={{ color: theme.colors.primary }}
+                >
                   #{tag}
                 </Text>
               </View>
@@ -90,7 +132,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onPress, onDelete }) =
           <IconButton
             icon="trash-outline"
             size={20}
-            color="#EF4444"
+            color={theme.colors.error}
             onPress={onDelete}
           />
         )}

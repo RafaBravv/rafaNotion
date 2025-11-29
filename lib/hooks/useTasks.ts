@@ -1,6 +1,6 @@
 // hooks/useTasks.ts
 import { useContext } from 'react';
-import { TaskContext } from '../context/TaskContext';
+import { TaskContext } from '../context/tasks/TaskContext';
 
 export const useTasks = () => {
   const context = useContext(TaskContext);

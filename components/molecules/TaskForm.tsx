@@ -1,11 +1,12 @@
 // components/molecules/TaskForm.tsx
+import React, { useState } from 'react';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { Input } from '../atoms/Input';
+import { Button } from '../atoms/Button';
+import { Text } from '../atoms/Text';
+import { useTheme } from '@/lib/hooks/useTheme';
 import { CreateTaskInput, TaskPriority, TaskStatus } from '@/lib/types/task.types';
 import { getDateInputValue } from '@/lib/utils/dateHelpers';
-import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { Button } from '../atoms/Button';
-import { Input } from '../atoms/Input';
-import { Text } from '../atoms/Text';
 
 interface TaskFormProps {
   onSubmit: (task: CreateTaskInput) => void;
@@ -18,6 +19,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   onCancel,
   initialValues 
 }) => {
+  const { theme } = useTheme();
   const [title, setTitle] = useState(initialValues?.title || '');
   const [description, setDescription] = useState(initialValues?.description || '');
   const [priority, setPriority] = useState<TaskPriority>(initialValues?.priority || 'medium');
@@ -57,9 +59,9 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   };
 
   const priorityOptions: { value: TaskPriority; label: string; color: string }[] = [
-    { value: 'low', label: 'Baja', color: 'bg-green-500' },
-    { value: 'medium', label: 'Media', color: 'bg-yellow-500' },
-    { value: 'high', label: 'Alta', color: 'bg-red-500' },
+    { value: 'low', label: 'Baja', color: theme.colors.priorityLow },
+    { value: 'medium', label: 'Media', color: theme.colors.priorityMedium },
+    { value: 'high', label: 'Alta', color: theme.colors.priorityHigh },
   ];
 
   const statusOptions: { value: TaskStatus; label: string }[] = [
@@ -69,7 +71,10 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   ];
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView 
+      className="flex-1" 
+      style={{ backgroundColor: theme.colors.background }}
+    >
       <View className="p-6">
         <Input
           label="Título de la tarea *"
@@ -92,7 +97,11 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
         {/* Prioridad */}
         <View className="mt-4">
-          <Text variant="caption" className="mb-2 font-medium text-gray-700">
+          <Text 
+            variant="caption" 
+            className="mb-2 font-medium"
+            style={{ color: theme.colors.text }}
+          >
             Prioridad
           </Text>
           <View className="flex-row gap-2">
@@ -100,15 +109,28 @@ export const TaskForm: React.FC<TaskFormProps> = ({
               <TouchableOpacity
                 key={option.value}
                 onPress={() => setPriority(option.value)}
-                className={`flex-1 py-3 rounded-lg border-2 ${
-                  priority === option.value 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-gray-300 bg-white'
-                }`}
+                className="flex-1 py-3 rounded-lg border-2"
+                style={{
+                  backgroundColor: priority === option.value 
+                    ? theme.colors.primaryLight + '20' 
+                    : theme.colors.surface,
+                  borderColor: priority === option.value 
+                    ? theme.colors.primary 
+                    : theme.colors.border,
+                }}
               >
                 <View className="items-center">
-                  <View className={`w-3 h-3 rounded-full ${option.color} mb-1`} />
-                  <Text className={priority === option.value ? 'text-blue-700 font-semibold' : 'text-gray-700'}>
+                  <View 
+                    className="w-3 h-3 rounded-full mb-1" 
+                    style={{ backgroundColor: option.color }}
+                  />
+                  <Text 
+                    style={{ 
+                      color: priority === option.value 
+                        ? theme.colors.primary 
+                        : theme.colors.text 
+                    }}
+                  >
                     {option.label}
                   </Text>
                 </View>
@@ -119,7 +141,11 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
         {/* Estado */}
         <View className="mt-4">
-          <Text variant="caption" className="mb-2 font-medium text-gray-700">
+          <Text 
+            variant="caption" 
+            className="mb-2 font-medium"
+            style={{ color: theme.colors.text }}
+          >
             Estado
           </Text>
           <View className="flex-row gap-2">
@@ -127,16 +153,23 @@ export const TaskForm: React.FC<TaskFormProps> = ({
               <TouchableOpacity
                 key={option.value}
                 onPress={() => setStatus(option.value)}
-                className={`flex-1 py-3 rounded-lg border-2 ${
-                  status === option.value 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-gray-300 bg-white'
-                }`}
+                className="flex-1 py-3 rounded-lg border-2"
+                style={{
+                  backgroundColor: status === option.value 
+                    ? theme.colors.primaryLight + '20' 
+                    : theme.colors.surface,
+                  borderColor: status === option.value 
+                    ? theme.colors.primary 
+                    : theme.colors.border,
+                }}
               >
                 <Text 
-                  className={`text-center ${
-                    status === option.value ? 'text-blue-700 font-semibold' : 'text-gray-700'
-                  }`}
+                  className="text-center"
+                  style={{ 
+                    color: status === option.value 
+                      ? theme.colors.primary 
+                      : theme.colors.text 
+                  }}
                 >
                   {option.label}
                 </Text>
@@ -159,7 +192,11 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
         {/* Tags */}
         <View className="mt-4">
-          <Text variant="caption" className="mb-2 font-medium text-gray-700">
+          <Text 
+            variant="caption" 
+            className="mb-2 font-medium"
+            style={{ color: theme.colors.text }}
+          >
             Etiquetas
           </Text>
           <View className="flex-row gap-2 mb-2">
@@ -184,12 +221,16 @@ export const TaskForm: React.FC<TaskFormProps> = ({
                 <TouchableOpacity
                   key={index}
                   onPress={() => removeTag(tag)}
-                  className="bg-blue-100 px-3 py-2 rounded-full flex-row items-center"
+                  className="px-3 py-2 rounded-full flex-row items-center"
+                  style={{ backgroundColor: theme.colors.primaryLight + '20' }}
                 >
-                  <Text variant="caption" className="text-blue-700">
+                  <Text 
+                    variant="caption"
+                    style={{ color: theme.colors.primary }}
+                  >
                     #{tag}
                   </Text>
-                  <Text className="ml-2 text-blue-700">×</Text>
+                  <Text style={{ marginLeft: 8, color: theme.colors.primary }}>×</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -197,7 +238,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
         </View>
 
         {/* Botones */}
-        <View className="mt-6 gap-3">
+        <View className="mb-6 gap-3">
           <Button
             title="Crear Tarea"
             onPress={handleSubmit}

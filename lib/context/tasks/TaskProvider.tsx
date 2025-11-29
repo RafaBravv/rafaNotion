@@ -1,7 +1,7 @@
 // context/TaskProvider.tsx
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { CreateTaskInput, Task } from '../../types/task.types';
 import { TaskContext } from './TaskContext';
-import { Task, CreateTaskInput } from '../types/task.types';
 
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
