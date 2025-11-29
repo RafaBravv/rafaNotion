@@ -1,6 +1,5 @@
-// components/atoms/Button.tsx
 import React from 'react';
-import { TouchableOpacity, TouchableOpacityProps, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Text } from './Text';
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -44,7 +43,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <TouchableOpacity
-      className={`rounded-lg items-center justify-center ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
+      className={`rounded-xl items-center justify-center ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
       disabled={isDisabled}
       {...props}
     >

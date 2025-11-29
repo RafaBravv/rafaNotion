@@ -1,6 +1,5 @@
-// components/atoms/Text.tsx
 import React from 'react';
-import { Text as RNText, TextProps } from 'react-native';
+import { Text as MyText, TextProps } from 'react-native';
 
 interface CustomTextProps extends TextProps {
   variant?: 'title' | 'subtitle' | 'body' | 'caption';
@@ -21,11 +20,11 @@ export const Text: React.FC<CustomTextProps> = ({
   };
 
   return (
-    <RNText 
+    <MyText 
       className={`${variantClasses[variant]} ${className}`}
       {...props}
     >
       {children}
-    </RNText>
+    </MyText>
   );
 };

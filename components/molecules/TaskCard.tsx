@@ -1,11 +1,11 @@
 // components/molecules/TaskCard.tsx
-import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
 import { Task } from '@/lib/types/task.types';
-import { Text } from '../atoms/Text';
-import { IconButton } from '../atoms/IconButton';
 import { formatDate, isOverdue } from '@/lib/utils/dateHelpers';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { IconButton } from '../atoms/IconButton';
+import { Text } from '../atoms/Text';
 
 interface TaskCardProps {
   task: Task;
